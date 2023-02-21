@@ -17,7 +17,9 @@ class SearchController extends Controller
         if(request('search')){
             $data->where('tags', 'like', '%' . request('search') . '%');
             $data2->where('tags', 'like', '%' . request('search') . '%');
-        }
+        }   
+
+        // return $data->get();
 
         return view('search')->with([
             'data' => $data->get(),

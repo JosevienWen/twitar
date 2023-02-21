@@ -14,7 +14,6 @@ class TweetsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'tweets'=>'max:250',
-            'tags'=>'max:250',
             'media'=>'image|mimes:jpeg,png,jpg'
         ]);
 
@@ -26,9 +25,13 @@ class TweetsController extends Controller
                 'error' => 'Data anda tidak berhasil di input'
             ]);
         } else {
+            $arrayData = explode('#', $request->tweets);
+            $arrayOfTags = array_slice($arrayData, 1, count($arrayData) - 1);
+            $tags = implode(',', $arrayOfTags);
+
             $data = new tweets;
             $data->tweets = $request->input('tweets');
-            $data->tags = $request->input('tags');
+            $data->tags = $tags;
             $data->user_id = $request->input('user_id');
 
             if($request->hasFile('media'))
@@ -74,10 +77,15 @@ class TweetsController extends Controller
                 'error' => 'Data anda tidak berhasil di input'
             ]);
         } else {
+            $arrayData = explode('#', $request->tweets);
+            $arrayOfTags = array_slice($arrayData, 1, count($arrayData) - 1);
+            $tags = implode(',', $arrayOfTags);
+
             $data = tweets::find($id);
             if($data){
+                
                 $data->tweets = $request->input('tweets');
-                $data->tags = $request->input('tags');
+                $data->tags = $tags;
 
                 if($request->hasFile('media'))
                 {

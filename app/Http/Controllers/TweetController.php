@@ -24,7 +24,7 @@ class TweetController extends Controller
         ]);
     }
 
-    //function untuk add comment
+    //function untuk select data dan return ke halaman addcomment
     public function addcomment($id){
         $data = tweets::with('user')->where('id', $id)->get();
         return view('addcomment')->with([
@@ -32,10 +32,10 @@ class TweetController extends Controller
         ]);
     }
 
+    //function untuk ngepost comment kedatabase
     public function postcomment(Request $request){
         $validator = Validator::make($request->all(), [
             'comment'=>'max:250',
-            'tags'=>'max:250',
             'media'=>'image|mimes:jpeg,png,jpg'
         ]);
 
@@ -47,9 +47,13 @@ class TweetController extends Controller
                 'error' => 'Data anda tidak berhasil di input'
             ]);
         } else {
+            $arrayData = explode('#', $request->comment);
+            $arrayOfTags = array_slice($arrayData, 1, count($arrayData) - 1);
+            $tags = implode(',', $arrayOfTags);
+
             $data = new comments;
             $data->comment = $request->input('comment');
-            $data->tags = $request->input('tags');
+            $data->tags = $tags;
             $data->user_id = $request->input('user_id');
             $data->tweet_id = $request->input('tweet_id');
 
@@ -90,7 +94,6 @@ class TweetController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'comment'=>'max:250',
-            'tags'=>'max:250',
             'media'=>'image|mimes:jpeg,png,jpg'
         ]);
 
@@ -102,10 +105,14 @@ class TweetController extends Controller
                 'error' => 'Data anda tidak berhasil di input'
             ]);
         } else {
+            $arrayData = explode('#', $request->comment);
+            $arrayOfTags = array_slice($arrayData, 1, count($arrayData) - 1);
+            $tags = implode(',', $arrayOfTags);
+
             $data = comments::find($id);
             if($data){
                 $data->comment = $request->input('comment');
-                $data->tags = $request->input('tags');
+                $data->tags = $tags;
 
                 if($request->hasFile('media'))
                 {

@@ -28,7 +28,7 @@ Twitar
                         </p>
                     </div>
                     <div class="w-14">
-                        <p class="text-md text-slate-500 truncate">{{ Auth::user()->bio }}</p>
+                        <p class="text-md text-slate-500">{{ Auth::user()->bio }}</p>
                     </div>
                 </div>
             </div>
